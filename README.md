@@ -1,10 +1,11 @@
-# CareBridge Hospital
+## Live Website
 
-A full-stack hospital website built for the WnCC Web Development LS final assignment.
+https://strong-muffin-c33acf.netlify.app
+
+## Backend URL
+
+https://hospital-backend-v2.onrender.com
 
 ## Frontend Folder
 
-The frontend folder is named:
-
-```text
 25B1224

@@ -1,0 +1,191 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 16px 32px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-weight: 800;
+  color: #0f766e;
+  font-size: 20px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.nav-button,
+.primary-button,
+.secondary-button,
+.danger-button {
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
+}
+
+.nav-button,
+.primary-button {
+  background: #0f766e;
+  color: white;
+}
+
+.secondary-button {
+  background: white;
+  border: 1px solid #0f766e;
+  color: #0f766e;
+}
+
+.danger-button {
+  background: #dc2626;
+  color: white;
+}
+
+.small {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 12px;
+}
+
+.main-content {
+  min-height: 80vh;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 28px;
+  padding: 70px 32px;
+  align-items: center;
+}
+
+.hero-content {
+  background: linear-gradient(135deg, #ccfbf1, #e0f2fe);
+  border-radius: 28px;
+  padding: 48px;
+}
+
+.eyebrow {
+  color: #0f766e;
+  font-weight: 800;
+}
+
+.hero h1 {
+  font-size: 52px;
+  margin: 10px 0;
+}
+
+.hero p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.hero-card,
+.card,
+.form-card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+.page-padding {
+  padding: 40px 32px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.card h3 {
+  color: #0f766e;
+}
+
+.search-input,
+.form-card input,
+.form-card select,
+.form-card textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.form-page {
+  display: flex;
+  justify-content: center;
+  padding: 50px 20px;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.form-card.wide {
+  max-width: 650px;
+}
+
+.footer {
+  background: #0f172a;
+  color: white;
+  padding: 24px 32px;
+  text-align: center;
+}
+
+@media (max-width: 800px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 30px 18px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .navbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .nav-links {
+    gap: 12px;
+  }
+}

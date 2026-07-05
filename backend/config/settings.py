@@ -162,3 +162,5 @@ if os.environ.get("RENDER"):
 cors_origins = os.environ.get("CORS_ALLOWED_ORIGINS")
 if cors_origins:
     CORS_ALLOWED_ORIGINS = cors_origins.split(",")
+
+

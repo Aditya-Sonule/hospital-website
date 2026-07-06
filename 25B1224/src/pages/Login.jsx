@@ -18,7 +18,7 @@ function Login() {
     try {
       await login(username, password);
       alert("Login successful.");
-      navigate(nextPage);
+      navigate("/");
     } catch {
       alert("Login failed. Check username and password.");
     }

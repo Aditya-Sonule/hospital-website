@@ -33,6 +33,7 @@ function BookAppointment() {
         const data = Array.isArray(response.data)
           ? response.data
           : response.data.results || [];
+
         setDepartments(data);
       })
       .catch((error) => {
@@ -45,6 +46,7 @@ function BookAppointment() {
         const data = Array.isArray(response.data)
           ? response.data
           : response.data.results || [];
+
         setDoctors(data);
       })
       .catch((error) => {
@@ -97,14 +99,15 @@ function BookAppointment() {
         `/available-slots/?doctor=${form.doctor}&date=${form.appointment_date}`
       )
       .then((response) => {
-        setAvailableSlots(response.data);
+        const slots = Array.isArray(response.data) ? response.data : [];
+        setAvailableSlots(slots);
 
-        if (response.data.length === 0) {
+        if (slots.length === 0) {
           setSlotMessage("No slots available for the selected date.");
         }
       })
       .catch((error) => {
-        console.error("Slots error:", error);
+        console.error("Slots error:", error.response?.data || error);
         setAvailableSlots([]);
 
         const message =

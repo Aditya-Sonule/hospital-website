@@ -1,6 +1,13 @@
+# CareBridge Hospital
+
+CareBridge Hospital is a full-stack hospital website built for the WnCC Web Development LS final assignment.  
+The project provides a patient-friendly platform where users can explore hospital departments, view doctors, book appointments, register for health services, and support treatment for financially vulnerable patients.
+
 ## Live Website
 
-https://strong-muffin-c33acf.netlify.app
+Frontend Netlify URL:
+
+https://unique-sorbet-b441ec.netlify.app
 
 ## Backend URL
 

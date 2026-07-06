@@ -429,3 +429,13 @@ a {
 .nav-links a:hover {
   color: #0f766e;
 }
+
+
+.empty-message {
+  margin-top: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  color: #475569;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}

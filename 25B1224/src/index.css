@@ -189,3 +189,243 @@ a {
     gap: 12px;
   }
 }
+
+.home-hero {
+  min-height: calc(100vh - 92px);
+  background-image:
+    linear-gradient(
+      rgba(5, 46, 42, 0.67),
+      rgba(15, 23, 42, 0.72)
+    ),
+    url("/images/hospital-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 56px 40px;
+  display: flex;
+  align-items: center;
+}
+
+.home-overlay {
+  width: 100%;
+  max-width: 1720px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.65fr);
+  gap: 44px;
+  align-items: center;
+}
+
+.home-content {
+  max-width: 920px;
+  min-height: 470px;
+  padding: 44px 48px;
+  border-radius: 26px;
+  background: rgba(15, 23, 42, 0.52);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.home-content .eyebrow {
+  color: #99f6e4;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.home-content h1 {
+  color: #ffffff;
+  font-size: clamp(40px, 4.3vw, 58px);
+  line-height: 1.08;
+  margin: 0 0 22px;
+  letter-spacing: -0.035em;
+  max-width: 680px;
+}
+
+.hero-description {
+  color: #e0f2fe;
+  font-size: 17px;
+  line-height: 1.65;
+  max-width: 720px;
+  margin: 0;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 13px 22px;
+  font-size: 15px;
+  font-weight: 800;
+  box-shadow: 0 14px 32px rgba(15, 118, 110, 0.34);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 42px rgba(15, 118, 110, 0.48);
+}
+
+.secondary-button {
+  background: rgba(255, 255, 255, 0.94);
+  color: #0f766e;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 14px;
+  padding: 13px 22px;
+  font-size: 15px;
+  font-weight: 800;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.secondary-button:hover {
+  transform: translateY(-3px);
+  background: white;
+}
+
+.emergency-card {
+  width: 100%;
+  max-width: 470px;
+  min-height: 300px;
+  justify-self: center;
+  align-self: center;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 28px;
+  padding: 34px 36px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.emergency-badge {
+  width: fit-content;
+  display: inline-block;
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.emergency-card h3 {
+  font-size: 27px;
+  line-height: 1.15;
+  margin: 0 0 16px;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+}
+
+.emergency-card p {
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: #334155;
+  margin: 0;
+}
+
+.emergency-card strong {
+  display: block;
+  margin-top: 20px;
+  font-size: 17px;
+  color: #0f766e;
+}
+
+@media (max-width: 1100px) {
+  .home-overlay {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .home-content {
+    max-width: 100%;
+    min-height: auto;
+  }
+
+  .emergency-card {
+    justify-self: start;
+    max-width: 620px;
+  }
+}
+
+@media (max-width: 700px) {
+  .home-hero {
+    padding: 36px 18px;
+    min-height: auto;
+  }
+
+  .home-content {
+    padding: 30px 24px;
+    border-radius: 22px;
+  }
+
+  .home-content h1 {
+    font-size: 36px;
+  }
+
+  .hero-description {
+    font-size: 16px;
+  }
+
+  .hero-actions {
+    gap: 12px;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .emergency-card {
+    padding: 26px;
+    min-height: auto;
+  }
+
+  .emergency-card h3 {
+    font-size: 24px;
+  }
+}
+
+
+.navbar {
+  min-height: 78px;
+  padding: 0 40px;
+  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.logo {
+  font-size: 23px;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  gap: 22px;
+}
+
+.nav-links a {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.nav-links a:hover {
+  color: #0f766e;
+}

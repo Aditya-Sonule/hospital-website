@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Department, Doctor, Appointment
-
+from .models import Department, Doctor, Appointment, TreatmentSupportDonation
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
@@ -49,6 +48,8 @@ class DoctorSerializer(serializers.ModelSerializer):
             "consultation_fee",
             "available_days",
             "available_time",
+            "available_start_time",
+            "available_end_time",
             "image_url",
         ]
 
@@ -63,6 +64,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user",
+            "appointment_type",
             "doctor",
             "doctor_name",
             "department",
@@ -76,7 +78,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             "status",
             "created_at",
         ]
-        read_only_fields = ["id", "user", "status", "created_at"]
+        read_only_fields = ["id", "user", "created_at"]
 
     def validate_age(self, value):
         if value <= 0 or value > 120:
@@ -86,4 +88,62 @@ class AppointmentSerializer(serializers.ModelSerializer):
     def validate_phone(self, value):
         if len(value) < 10:
             raise serializers.ValidationError("Enter a valid phone number.")
+        return value
+
+    def validate(self, data):
+        appointment_type = data.get("appointment_type")
+        doctor = data.get("doctor")
+        department = data.get("department")
+        appointment_date = data.get("appointment_date")
+        time_slot = data.get("time_slot")
+
+        if appointment_type == "doctor":
+            if not doctor:
+                raise serializers.ValidationError("Doctor is required for doctor appointments.")
+
+            if not department:
+                raise serializers.ValidationError("Department is required for doctor appointments.")
+
+            if doctor.department != department:
+                raise serializers.ValidationError("Selected doctor does not belong to selected department.")
+
+            if not doctor.available_start_time or not doctor.available_end_time:
+                raise serializers.ValidationError("Doctor availability time is not configured.")
+
+            if time_slot < doctor.available_start_time or time_slot >= doctor.available_end_time:
+                raise serializers.ValidationError("Selected slot is outside doctor's available time.")
+
+            minute = time_slot.minute
+            if minute % 15 != 0:
+                raise serializers.ValidationError("Appointments must be booked in 15-minute slots.")
+
+            slot_taken = Appointment.objects.filter(
+                doctor=doctor,
+                appointment_date=appointment_date,
+                time_slot=time_slot,
+                status__in=["pending", "confirmed"],
+            ).exists()
+
+            if slot_taken:
+                raise serializers.ValidationError("This slot is already booked.")
+
+        return data
+    
+class TreatmentSupportDonationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TreatmentSupportDonation
+        fields = [
+            "id",
+            "donor_name",
+            "email",
+            "phone",
+            "amount",
+            "message",
+            "created_at",
+        ]
+        read_only_fields = ["id", "created_at"]
+
+    def validate_amount(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Donation amount must be greater than 0.")
         return value

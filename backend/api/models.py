@@ -10,7 +10,6 @@ class Department(models.Model):
     def __str__(self):
         return self.name
 
-
 class Doctor(models.Model):
     department = models.ForeignKey(
         Department,
@@ -24,12 +23,13 @@ class Doctor(models.Model):
     consultation_fee = models.PositiveIntegerField(default=500)
     available_days = models.CharField(max_length=150)
     available_time = models.CharField(max_length=100)
+    available_start_time = models.TimeField(null=True, blank=True)
+    available_end_time = models.TimeField(null=True, blank=True)
     image_url = models.URLField(blank=True)
 
     def __str__(self):
         return self.name
-
-
+    
 class Appointment(models.Model):
     STATUS_CHOICES = [
         ("pending", "Pending"),
@@ -38,33 +38,68 @@ class Appointment(models.Model):
         ("completed", "Completed"),
     ]
 
+    APPOINTMENT_TYPE_CHOICES = [
+        ("doctor", "Doctor Appointment"),
+        ("body_checkup", "Body Checkup"),
+        ("blood_donation", "Blood Donation"),
+        ("organ_donation", "Organ Donation Counselling"),
+    ]
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="appointments"
     )
+
+    appointment_type = models.CharField(
+        max_length=30,
+        choices=APPOINTMENT_TYPE_CHOICES,
+        default="doctor"
+    )
+
     doctor = models.ForeignKey(
         Doctor,
         on_delete=models.CASCADE,
-        related_name="appointments"
+        related_name="appointments",
+        null=True,
+        blank=True
     )
+
     department = models.ForeignKey(
         Department,
         on_delete=models.CASCADE,
-        related_name="appointments"
+        related_name="appointments",
+        null=True,
+        blank=True
     )
+
     patient_name = models.CharField(max_length=100)
     age = models.PositiveIntegerField()
     phone = models.CharField(max_length=15)
+
     appointment_date = models.DateField()
-    time_slot = models.CharField(max_length=50)
+    time_slot = models.TimeField()
+
     reason = models.TextField(blank=True)
+
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default="pending"
     )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.patient_name} - {self.doctor.name}"
+        return f"{self.patient_name} - {self.appointment_type}"
+    
+class TreatmentSupportDonation(models.Model):
+    donor_name = models.CharField(max_length=100)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=15)
+    amount = models.PositiveIntegerField()
+    message = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.donor_name} - ₹{self.amount}"

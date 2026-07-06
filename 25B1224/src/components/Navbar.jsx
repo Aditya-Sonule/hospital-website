@@ -16,6 +16,7 @@ function Navbar() {
         <Link to="/doctors">Doctors</Link>
         <Link to="/book-appointment">Book Appointment</Link>
         <Link to="/contact">Contact</Link>
+        <Link to="/treatment-support">Support</Link>
 
         {isLoggedIn ? (
           <>

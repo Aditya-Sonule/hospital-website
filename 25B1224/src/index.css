@@ -439,3 +439,127 @@ a {
   color: #475569;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
+
+.home-services-section {
+  padding: 80px 40px;
+  background: #f8fafc;
+}
+
+.section-heading {
+  max-width: 820px;
+  margin: 0 auto 42px;
+  text-align: center;
+}
+
+.section-heading h2 {
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.1;
+  margin: 12px 0;
+  color: #0f172a;
+}
+
+.section-heading p {
+  color: #475569;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.eyebrow.dark {
+  color: #0f766e;
+}
+
+.service-grid {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.service-card {
+  background: white;
+  padding: 30px;
+  border-radius: 24px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 60px rgba(15, 23, 42, 0.12);
+}
+
+.service-card h3 {
+  font-size: 24px;
+  color: #0f172a;
+  margin: 0 0 12px;
+}
+
+.service-card p {
+  color: #475569;
+  line-height: 1.6;
+  min-height: 78px;
+}
+
+.service-card a {
+  display: inline-block;
+  margin-top: 16px;
+  color: #0f766e;
+  font-weight: 800;
+}
+
+.accent-blue {
+  border-top: 5px solid #0284c7;
+}
+
+.accent-green {
+  border-top: 5px solid #16a34a;
+}
+
+.accent-red {
+  border-top: 5px solid #dc2626;
+}
+
+.accent-purple {
+  border-top: 5px solid #7c3aed;
+}
+
+.accent-gold {
+  border-top: 5px solid #ca8a04;
+}
+
+.wide-service-card {
+  grid-column: span 4;
+  background: linear-gradient(135deg, #fff7ed, #fefce8);
+}
+
+.form-subtitle {
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 1100px) {
+  .service-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .wide-service-card {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 700px) {
+  .home-services-section {
+    padding: 50px 18px;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wide-service-card {
+    grid-column: span 1;
+  }
+}

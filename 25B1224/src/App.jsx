@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import BookAppointment from "./pages/BookAppointment";
 import MyAppointments from "./pages/MyAppointments";
 import Contact from "./pages/Contact";
+import TreatmentSupport from "./pages/TreatmentSupport";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/book-appointment" element={<BookAppointment />} />
           <Route path="/my-appointments" element={<MyAppointments />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/treatment-support" element={<TreatmentSupport />} />
         </Routes>
       </main>
       <Footer />

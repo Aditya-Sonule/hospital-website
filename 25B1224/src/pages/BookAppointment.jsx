@@ -38,6 +38,9 @@ function BookAppointment() {
     if (!form.department) return false;
     return String(doctor.department) === String(form.department);
   });
+  const selectedDoctor = doctors.find(
+  (doctor) => String(doctor.id) === String(form.doctor)
+  );
 
   useEffect(() => {
     if (form.appointment_type !== "doctor") {
@@ -67,49 +70,55 @@ function BookAppointment() {
       .catch((error) => {
         console.error("Slots error:", error);
         setAvailableSlots([]);
+
+        const message =
+          error.response?.data?.error ||
+          "No slots available for the selected date.";
+
+        alert(message);
       });
   }, [form.doctor, form.appointment_date, form.appointment_type]);
 
-  function handleChange(event) {
-    const { name, value } = event.target;
+function handleChange(event) {
+  const { name, value } = event.target;
 
-    if (name === "department") {
-      setForm({
-        ...form,
-        department: value,
-        doctor: "",
-        time_slot: "",
-      });
-      setAvailableSlots([]);
-      return;
-    }
+  if (name === "department") {
+    setForm({
+      ...form,
+      department: value,
+      doctor: "",
+      time_slot: "",
+    });
+    setAvailableSlots([]);
+    return;
+  }
 
-    if (name === "doctor" || name === "appointment_date") {
-      setForm({
-        ...form,
-        value,
-        time_slot: "",
-      });
-      return;
-    }
-
-    if (name === "appointment_type") {
-      setForm({
-        ...form,
-        appointment_type: value,
-        department: "",
-        doctor: "",
-        time_slot: "",
-      });
-      setAvailableSlots([]);
-      return;
-    }
-
+  if (name === "doctor" || name === "appointment_date") {
     setForm({
       ...form,
       value,
+      time_slot: "",
     });
+    return;
   }
+
+  if (name === "appointment_type") {
+    setForm({
+      ...form,
+      appointment_type: value,
+      department: "",
+      doctor: "",
+      time_slot: "",
+    });
+    setAvailableSlots([]);
+    return;
+  }
+
+  setForm({
+    ...form,
+    value,
+  });
+}
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -229,6 +238,12 @@ function BookAppointment() {
                 </option>
               ))}
             </select>
+            {selectedDoctor && (
+              <p className="doctor-availability-note">
+                Available on: {selectedDoctor.available_days} | Time:{" "}
+                {selectedDoctor.available_time}
+              </p>
+)}
           </>
         )}
 

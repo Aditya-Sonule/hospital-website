@@ -49,6 +49,8 @@ class TreatmentSupportDonationViewSet(viewsets.ModelViewSet):
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
+@api_view(["GET"])
+@permission_classes([AllowAny])
 def available_slots(request):
     doctor_id = request.query_params.get("doctor")
     date_value = request.query_params.get("date")
@@ -69,7 +71,7 @@ def available_slots(request):
 
     if not doctor.available_start_time or not doctor.available_end_time:
         return Response(
-            {"error": "Doctor availability is not configured"},
+            {"error": "Doctor availability time is not configured"},
             status=status.HTTP_400_BAD_REQUEST
         )
 
@@ -78,6 +80,36 @@ def available_slots(request):
     except ValueError:
         return Response(
             {"error": "Invalid date format. Use YYYY-MM-DD."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    day_map = {
+        "Mon": 0,
+        "Tue": 1,
+        "Wed": 2,
+        "Thu": 3,
+        "Fri": 4,
+        "Sat": 5,
+        "Sun": 6,
+    }
+
+    doctor_days = [
+        day.strip()
+        for day in doctor.available_days.split(",")
+        if day.strip()
+    ]
+
+    allowed_weekdays = [
+        day_map[day]
+        for day in doctor_days
+        if day in day_map
+    ]
+
+    if appointment_date.weekday() not in allowed_weekdays:
+        return Response(
+            {
+                "error": f"Doctor is only available on {doctor.available_days}."
+            },
             status=status.HTTP_400_BAD_REQUEST
         )
 

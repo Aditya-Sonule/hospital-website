@@ -90,44 +90,70 @@ class AppointmentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Enter a valid phone number.")
         return value
 
-    def validate(self, data):
-        appointment_type = data.get("appointment_type")
-        doctor = data.get("doctor")
-        department = data.get("department")
-        appointment_date = data.get("appointment_date")
-        time_slot = data.get("time_slot")
+def validate(self, data):
+    appointment_type = data.get("appointment_type")
+    doctor = data.get("doctor")
+    department = data.get("department")
+    appointment_date = data.get("appointment_date")
+    time_slot = data.get("time_slot")
 
-        if appointment_type == "doctor":
-            if not doctor:
-                raise serializers.ValidationError("Doctor is required for doctor appointments.")
+    if appointment_type == "doctor":
+        if not doctor:
+            raise serializers.ValidationError("Doctor is required for doctor appointments.")
 
-            if not department:
-                raise serializers.ValidationError("Department is required for doctor appointments.")
+        if not department:
+            raise serializers.ValidationError("Department is required for doctor appointments.")
 
-            if doctor.department != department:
-                raise serializers.ValidationError("Selected doctor does not belong to selected department.")
+        if doctor.department != department:
+            raise serializers.ValidationError("Selected doctor does not belong to selected department.")
 
-            if not doctor.available_start_time or not doctor.available_end_time:
-                raise serializers.ValidationError("Doctor availability time is not configured.")
+        day_map = {
+            "Mon": 0,
+            "Tue": 1,
+            "Wed": 2,
+            "Thu": 3,
+            "Fri": 4,
+            "Sat": 5,
+            "Sun": 6,
+        }
 
-            if time_slot < doctor.available_start_time or time_slot >= doctor.available_end_time:
-                raise serializers.ValidationError("Selected slot is outside doctor's available time.")
+        doctor_days = [
+            day.strip()
+            for day in doctor.available_days.split(",")
+            if day.strip()
+        ]
 
-            minute = time_slot.minute
-            if minute % 15 != 0:
-                raise serializers.ValidationError("Appointments must be booked in 15-minute slots.")
+        allowed_weekdays = [
+            day_map[day]
+            for day in doctor_days
+            if day in day_map
+        ]
 
-            slot_taken = Appointment.objects.filter(
-                doctor=doctor,
-                appointment_date=appointment_date,
-                time_slot=time_slot,
-                status__in=["pending", "confirmed"],
-            ).exists()
+        if appointment_date.weekday() not in allowed_weekdays:
+            raise serializers.ValidationError(
+                f"Doctor is only available on {doctor.available_days}."
+            )
 
-            if slot_taken:
-                raise serializers.ValidationError("This slot is already booked.")
+        if not doctor.available_start_time or not doctor.available_end_time:
+            raise serializers.ValidationError("Doctor availability time is not configured.")
 
-        return data
+        if time_slot < doctor.available_start_time or time_slot >= doctor.available_end_time:
+            raise serializers.ValidationError("Selected slot is outside doctor's available time.")
+
+        if time_slot.minute % 15 != 0:
+            raise serializers.ValidationError("Appointments must be booked in 15-minute slots.")
+
+        slot_taken = Appointment.objects.filter(
+            doctor=doctor,
+            appointment_date=appointment_date,
+            time_slot=time_slot,
+            status__in=["pending", "confirmed"],
+        ).exists()
+
+        if slot_taken:
+            raise serializers.ValidationError("This slot is already booked.")
+
+    return data
     
 class TreatmentSupportDonationSerializer(serializers.ModelSerializer):
     class Meta:

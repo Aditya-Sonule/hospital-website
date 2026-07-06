@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 
 function BookAppointment() {
+  const [searchParams] = useSearchParams();
+  const initialType = searchParams.get("type") || "doctor";
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
 
   const [form, setForm] = useState({
-    appointment_type: "doctor",
+    appointment_type: initialType,
     patient_name: "",
     age: "",
     phone: "",

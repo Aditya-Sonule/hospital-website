@@ -49,32 +49,33 @@ function Home() {
         <div className="service-grid">
           <div className="service-card accent-blue">
             <h3>Doctor Appointments</h3>
-            <p>Consult specialists by department and book only available 15-minute slots.</p>
+            <p>Consult specialists by department and book available 15-minute slots.</p>
             <Link to="/book-appointment">Book appointment</Link>
           </div>
 
           <div className="service-card accent-green">
             <h3>Body Checkups</h3>
-            <p>Schedule preventive health checkups and routine screening visits.</p>
-            <Link to="/book-appointment">Schedule checkup</Link>
+            <p>Schedule preventive checkups and routine health screening visits.</p>
+            <Link to="/body-checkup">Explore checkups</Link>
           </div>
 
           <div className="service-card accent-red">
             <h3>Blood Donation</h3>
-            <p>Register for blood donation drives and help patients who need urgent support.</p>
-            <Link to="/book-appointment">Register as donor</Link>
+            <p>Register for blood donation drives and help patients in need.</p>
+            <Link to="/blood-donation">Become a donor</Link>
           </div>
 
           <div className="service-card accent-purple">
             <h3>Organ Donation Counselling</h3>
-            <p>Book a counselling session to understand ethical organ donation registration.</p>
-            <Link to="/book-appointment">Request counselling</Link>
+            <p>Book an awareness session for ethical organ donation registration.</p>
+            <Link to="/organ-donation">Learn more</Link>
           </div>
 
           <div className="service-card accent-gold wide-service-card">
             <h3>Support Treatment for Poor Patients</h3>
             <p>
-              Contribute to treatment support funds that help patients from financially vulnerable backgrounds.
+              Contribute to treatment support funds for patients from financially
+              vulnerable backgrounds.
             </p>
             <Link to="/treatment-support">Support treatment</Link>
           </div>

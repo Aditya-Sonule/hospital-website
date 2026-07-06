@@ -15,9 +15,11 @@ function Navbar() {
         <Link to="/departments">Departments</Link>
         <Link to="/doctors">Doctors</Link>
         <Link to="/book-appointment">Book Appointment</Link>
-        <Link to="/contact">Contact</Link>
+        <Link to="/body-checkup">Checkups</Link>
+        <Link to="/blood-donation">Blood</Link>
+        <Link to="/organ-donation">Organ</Link>
         <Link to="/treatment-support">Support</Link>
-
+        <Link to="/contact">Contact</Link>
         {isLoggedIn ? (
           <>
             <Link to="/my-appointments">My Appointments</Link>

@@ -10,6 +10,10 @@ import BookAppointment from "./pages/BookAppointment";
 import MyAppointments from "./pages/MyAppointments";
 import Contact from "./pages/Contact";
 import TreatmentSupport from "./pages/TreatmentSupport";
+import BodyCheckup from "./pages/BodyCheckup";
+import BloodDonation from "./pages/BloodDonation";
+import OrganDonation from "./pages/OrganDonation";
+import TreatmentSupport from "./pages/TreatmentSupport";
 
 function App() {
   return (
@@ -25,6 +29,10 @@ function App() {
           <Route path="/book-appointment" element={<BookAppointment />} />
           <Route path="/my-appointments" element={<MyAppointments />} />
           <Route path="/contact" element={<Contact />} />
+
+          <Route path="/body-checkup" element={<BodyCheckup />} />
+          <Route path="/blood-donation" element={<BloodDonation />} />
+          <Route path="/organ-donation" element={<OrganDonation />} />
           <Route path="/treatment-support" element={<TreatmentSupport />} />
         </Routes>
       </main>

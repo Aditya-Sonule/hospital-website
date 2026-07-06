@@ -661,3 +661,38 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+.doctor-availability-note {
+  background: #ecfdf5;
+  color: #047857;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin: 8px 0 12px;
+  border: 1px solid #a7f3d0;
+}
+
+.form-subtitle {
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.auth-switch-text {
+  margin-top: 18px;
+  color: #475569;
+  font-size: 15px;
+  text-align: center;
+}
+
+.auth-switch-text a {
+  color: #0f766e;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.form-subtitle {
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}

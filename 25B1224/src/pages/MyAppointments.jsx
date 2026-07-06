@@ -1,24 +1,31 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 
 function MyAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   async function loadAppointments() {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      alert("Please login to view your appointments.");
+      navigate("/login?next=/my-appointments");
+      return;
+    }
+
     try {
       const response = await axiosInstance.get("/appointments/");
       setAppointments(response.data);
     } catch {
       alert("Please login to view appointments.");
+      navigate("/login?next=/my-appointments");
     } finally {
       setLoading(false);
     }
   }
-
-  useEffect(() => {
-    loadAppointments();
-  }, []);
 
   async function cancelAppointment(id) {
     try {

@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 
 function BookAppointment() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const initialType = searchParams.get("type") || "doctor";
+
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
@@ -26,6 +29,7 @@ function BookAppointment() {
       const data = Array.isArray(response.data)
         ? response.data
         : response.data.results || [];
+
       setDepartments(data);
     });
 
@@ -33,6 +37,7 @@ function BookAppointment() {
       const data = Array.isArray(response.data)
         ? response.data
         : response.data.results || [];
+
       setDoctors(data);
     });
   }, []);
@@ -41,12 +46,18 @@ function BookAppointment() {
     if (!form.department) return false;
     return String(doctor.department) === String(form.department);
   });
+
   const selectedDoctor = doctors.find(
-  (doctor) => String(doctor.id) === String(form.doctor)
+    (doctor) => String(doctor.id) === String(form.doctor)
   );
 
   useEffect(() => {
     if (form.appointment_type !== "doctor") {
+      if (!form.appointment_date) {
+        setAvailableSlots([]);
+        return;
+      }
+
       setAvailableSlots([
         { value: "09:00", label: "09:00 AM" },
         { value: "09:15", label: "09:15 AM" },
@@ -56,7 +67,12 @@ function BookAppointment() {
         { value: "10:15", label: "10:15 AM" },
         { value: "10:30", label: "10:30 AM" },
         { value: "10:45", label: "10:45 AM" },
+        { value: "11:00", label: "11:00 AM" },
+        { value: "11:15", label: "11:15 AM" },
+        { value: "11:30", label: "11:30 AM" },
+        { value: "11:45", label: "11:45 AM" },
       ]);
+
       return;
     }
 
@@ -82,54 +98,86 @@ function BookAppointment() {
       });
   }, [form.doctor, form.appointment_date, form.appointment_type]);
 
-function handleChange(event) {
-  const { name, value } = event.target;
+  function handleChange(event) {
+    const { name, value } = event.target;
 
-  if (name === "department") {
-    setForm({
-      ...form,
-      department: value,
-      doctor: "",
-      time_slot: "",
-    });
-    setAvailableSlots([]);
-    return;
-  }
+    if (name === "appointment_type") {
+      setForm({
+        ...form,
+        appointment_type: value,
+        department: "",
+        doctor: "",
+        appointment_date: "",
+        time_slot: "",
+        reason: "",
+      });
 
-  if (name === "doctor" || name === "appointment_date") {
+      setAvailableSlots([]);
+      return;
+    }
+
+    if (name === "department") {
+      setForm({
+        ...form,
+        department: value,
+        doctor: "",
+        time_slot: "",
+      });
+
+      setAvailableSlots([]);
+      return;
+    }
+
+    if (name === "doctor") {
+      setForm({
+        ...form,
+        doctor: value,
+        time_slot: "",
+      });
+
+      setAvailableSlots([]);
+      return;
+    }
+
+    if (name === "appointment_date") {
+      setForm({
+        ...form,
+        appointment_date: value,
+        time_slot: "",
+      });
+
+      setAvailableSlots([]);
+      return;
+    }
+
     setForm({
       ...form,
       value,
-      time_slot: "",
     });
-    return;
   }
-
-  if (name === "appointment_type") {
-    setForm({
-      ...form,
-      appointment_type: value,
-      department: "",
-      doctor: "",
-      time_slot: "",
-    });
-    setAvailableSlots([]);
-    return;
-  }
-
-  setForm({
-    ...form,
-    value,
-  });
-}
 
   async function handleSubmit(event) {
     event.preventDefault();
 
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      alert("Please login before booking a service.");
+
+      const currentPage = location.pathname + location.search;
+
+      navigate(`/login?next=${encodeURIComponent(currentPage)}`);
+
+      return;
+    }
     try {
       const payload = {
-        ...form,
+        appointment_type: form.appointment_type,
+        patient_name: form.patient_name,
         age: Number(form.age),
+        phone: form.phone,
+        appointment_date: form.appointment_date,
+        time_slot: form.time_slot,
+        reason: form.reason,
       };
 
       if (form.appointment_type === "doctor") {
@@ -142,7 +190,7 @@ function handleChange(event) {
 
       await axiosInstance.post("/appointments/", payload);
 
-      alert("Booking submitted successfully.");
+      alert("Booking submitted successfully. You can view it in My Appointments.");
 
       setForm({
         appointment_type: "doctor",
@@ -159,7 +207,13 @@ function handleChange(event) {
       setAvailableSlots([]);
     } catch (error) {
       console.error("Booking error:", error.response?.data || error);
-      alert("Booking failed. Please check the selected details and login status.");
+
+      const backendError =
+        error.response?.data?.non_field_errors?.[0] ||
+        error.response?.data?.detail ||
+        "Booking failed. Please check the selected details and login status.";
+
+      alert(backendError);
     }
   }
 
@@ -167,8 +221,10 @@ function handleChange(event) {
     <section className="form-page">
       <form className="form-card wide" onSubmit={handleSubmit}>
         <h1>Book a Service</h1>
+
         <p className="form-subtitle">
-          Book doctor appointments, body checkups, blood donation, or organ donation counselling.
+          Book doctor appointments, body checkups, blood donation, or organ
+          donation counselling.
         </p>
 
         <select
@@ -217,6 +273,7 @@ function handleChange(event) {
               required
             >
               <option value="">Select department</option>
+
               {departments.map((department) => (
                 <option value={department.id} key={department.id}>
                   {department.name}
@@ -241,12 +298,13 @@ function handleChange(event) {
                 </option>
               ))}
             </select>
+
             {selectedDoctor && (
               <p className="doctor-availability-note">
                 Available on: {selectedDoctor.available_days} | Time:{" "}
                 {selectedDoctor.available_time}
               </p>
-)}
+            )}
           </>
         )}
 

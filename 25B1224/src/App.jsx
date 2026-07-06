@@ -13,7 +13,6 @@ import TreatmentSupport from "./pages/TreatmentSupport";
 import BodyCheckup from "./pages/BodyCheckup";
 import BloodDonation from "./pages/BloodDonation";
 import OrganDonation from "./pages/OrganDonation";
-import TreatmentSupport from "./pages/TreatmentSupport";
 
 function App() {
   return (

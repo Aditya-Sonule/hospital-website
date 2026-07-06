@@ -6,11 +6,13 @@ function BookAppointment() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
+
   const initialType = searchParams.get("type") || "doctor";
 
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
+  const [slotMessage, setSlotMessage] = useState("");
 
   const [form, setForm] = useState({
     appointment_type: initialType,
@@ -25,21 +27,29 @@ function BookAppointment() {
   });
 
   useEffect(() => {
-    axiosInstance.get("/departments/").then((response) => {
-      const data = Array.isArray(response.data)
-        ? response.data
-        : response.data.results || [];
+    axiosInstance
+      .get("/departments/")
+      .then((response) => {
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data.results || [];
+        setDepartments(data);
+      })
+      .catch((error) => {
+        console.error("Departments error:", error);
+      });
 
-      setDepartments(data);
-    });
-
-    axiosInstance.get("/doctors/").then((response) => {
-      const data = Array.isArray(response.data)
-        ? response.data
-        : response.data.results || [];
-
-      setDoctors(data);
-    });
+    axiosInstance
+      .get("/doctors/")
+      .then((response) => {
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data.results || [];
+        setDoctors(data);
+      })
+      .catch((error) => {
+        console.error("Doctors error:", error);
+      });
   }, []);
 
   const filteredDoctors = doctors.filter((doctor) => {
@@ -52,12 +62,14 @@ function BookAppointment() {
   );
 
   useEffect(() => {
-    if (form.appointment_type !== "doctor") {
-      if (!form.appointment_date) {
-        setAvailableSlots([]);
-        return;
-      }
+    setSlotMessage("");
 
+    if (!form.appointment_date) {
+      setAvailableSlots([]);
+      return;
+    }
+
+    if (form.appointment_type !== "doctor") {
       setAvailableSlots([
         { value: "09:00", label: "09:00 AM" },
         { value: "09:15", label: "09:15 AM" },
@@ -72,19 +84,24 @@ function BookAppointment() {
         { value: "11:30", label: "11:30 AM" },
         { value: "11:45", label: "11:45 AM" },
       ]);
-
       return;
     }
 
-    if (!form.doctor || !form.appointment_date) {
+    if (!form.doctor) {
       setAvailableSlots([]);
       return;
     }
 
     axiosInstance
-      .get(`/available-slots/?doctor=${form.doctor}&date=${form.appointment_date}`)
+      .get(
+        `/available-slots/?doctor=${form.doctor}&date=${form.appointment_date}`
+      )
       .then((response) => {
         setAvailableSlots(response.data);
+
+        if (response.data.length === 0) {
+          setSlotMessage("No slots available for the selected date.");
+        }
       })
       .catch((error) => {
         console.error("Slots error:", error);
@@ -94,7 +111,7 @@ function BookAppointment() {
           error.response?.data?.error ||
           "No slots available for the selected date.";
 
-        alert(message);
+        setSlotMessage(message);
       });
   }, [form.doctor, form.appointment_date, form.appointment_type]);
 
@@ -102,73 +119,83 @@ function BookAppointment() {
     const { name, value } = event.target;
 
     if (name === "appointment_type") {
-      setForm({
-        ...form,
+      setForm((previousForm) => ({
+        ...previousForm,
         appointment_type: value,
         department: "",
         doctor: "",
         appointment_date: "",
         time_slot: "",
         reason: "",
-      });
+      }));
 
       setAvailableSlots([]);
+      setSlotMessage("");
       return;
     }
 
     if (name === "department") {
-      setForm({
-        ...form,
+      setForm((previousForm) => ({
+        ...previousForm,
         department: value,
         doctor: "",
         time_slot: "",
-      });
+      }));
 
       setAvailableSlots([]);
+      setSlotMessage("");
       return;
     }
 
     if (name === "doctor") {
-      setForm({
-        ...form,
+      setForm((previousForm) => ({
+        ...previousForm,
         doctor: value,
         time_slot: "",
-      });
+      }));
 
       setAvailableSlots([]);
+      setSlotMessage("");
       return;
     }
 
     if (name === "appointment_date") {
-      setForm({
-        ...form,
+      setForm((previousForm) => ({
+        ...previousForm,
         appointment_date: value,
         time_slot: "",
-      });
+      }));
 
       setAvailableSlots([]);
+      setSlotMessage("");
       return;
     }
 
-    setForm({
-      ...form,
+    setForm((previousForm) => ({
+      ...previousForm,
       value,
-    });
+    }));
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
 
     const token = localStorage.getItem("accessToken");
+
     if (!token) {
       alert("Please login before booking a service.");
 
       const currentPage = location.pathname + location.search;
-
       navigate(`/login?next=${encodeURIComponent(currentPage)}`);
 
       return;
     }
+
+    if (!form.time_slot) {
+      alert("Please select an available time slot.");
+      return;
+    }
+
     try {
       const payload = {
         appointment_type: form.appointment_type,
@@ -205,6 +232,7 @@ function BookAppointment() {
       });
 
       setAvailableSlots([]);
+      setSlotMessage("");
     } catch (error) {
       console.error("Booking error:", error.response?.data || error);
 
@@ -315,6 +343,8 @@ function BookAppointment() {
           onChange={handleChange}
           required
         />
+
+        {slotMessage && <p className="slot-message">{slotMessage}</p>}
 
         <select
           name="time_slot"

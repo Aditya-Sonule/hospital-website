@@ -788,3 +788,9 @@ a {
   font-weight: 700;
   margin-top: 12px;
 }
+
+.password-hint {
+  color: #64748b;
+  font-size: 14px;
+  margin: 4px 0 16px;
+}
